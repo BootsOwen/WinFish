@@ -5364,7 +5364,7 @@ GameObject* Sexy::Board::SpawnPet(int thePetType, int theX, int theY, bool flag1
 		aPet = new FishTypePet(theX, theY, thePetType, flag1);
 	if (mApp->mGameMode == GAMEMODE_VIRTUAL_TANK && !flag2)
 	{
-		aPet->mVirtualTankId = flag1 ? PET_PRESTO : thePetType + 1000;
+		aPet->mVirtualTankId = flag1 ? PET_PRESTO + 1000 : thePetType + 1000;
 	}
 	AddGameObject(aPet);
 	mWidgetManager->AddWidget(aPet);
