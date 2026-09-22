@@ -79,8 +79,8 @@ void Sexy::Coin::Update()
 	else
 	{
 		if (!IsShell() ||
-			(mCoinType != 1 && mCoinType != 2 && mCoinType != 4 && mCoinType != 5 && mCoinType != 6
-				&& mCoinType != 7 && mCoinType != 11 && mCoinType != 12 && mCoinType != 13 && mCoinType != 14))
+			(mCoinType != COIN_SILVER_C && mCoinType != COIN_GOLD_C && mCoinType != COIN_DIAMOND && mCoinType != COIN_DIAMOND_PENTA && mCoinType != COIN_PEARL
+				&& mCoinType != COIN_TREASURE && mCoinType != SHELL_BLUE && mCoinType != SHELL_BLUE_PENTA && mCoinType != SHELL_SPIRAL && mCoinType != SHELL_SACK))
 		{
 			int aVal = mAnimationTimer;
 			if (mApp->mBoard->mPetsInTank[10] == 0)
@@ -133,7 +133,7 @@ void Sexy::Coin::Update()
 			return;
 		} // 111
 
-		if ((mCoinType != 18 && mCoinType != 5 && (mCoinType < 8 || mCoinType > 14)) || m0x168)
+		if ((mCoinType != COIN_PEANUT && mCoinType != COIN_DIAMOND_PENTA && (mCoinType < SHELL_SILVER || mCoinType > SHELL_SACK)) || m0x168)
 		{
 			if (mApp->mBoard->mPetsInTank[10] == 0)
 			{
@@ -372,7 +372,7 @@ void Sexy::Coin::Draw(Graphics* g)
 	GameObject::UpdateFishSongMgr();
 
 	int aVal = m0x19c % 8;
-	if (aVal > 7 && mCoinType != 6 && mCoinType != 7 && !m0x198)
+	if (aVal > 7 && mCoinType != COIN_PEARL && mCoinType != COIN_TREASURE && !m0x198)
 		return;
 
 	if (mDisappearTimer != 0)
@@ -411,7 +411,7 @@ void Sexy::Coin::Draw(Graphics* g)
 		g->SetColorizeImages(false);
 		return;
 	}
-	else if (mCoinType == 5 || mCoinType == 12 || mCoinType == COIN_DIAMOND || mCoinType == 11)
+	else if (mCoinType == COIN_DIAMOND_PENTA || mCoinType == SHELL_BLUE_PENTA || mCoinType == COIN_DIAMOND || mCoinType == SHELL_BLUE)
 	{
 		int aRow = 3;
 		int aX = 0;
@@ -428,7 +428,7 @@ void Sexy::Coin::Draw(Graphics* g)
 		g->SetColorizeImages(false);
 		return;
 	}
-	else if (mCoinType == COIN_PEARL || mCoinType == 13)
+	else if (mCoinType == COIN_PEARL || mCoinType == SHELL_SPIRAL)
 	{
 		if (!isShell)
 		{
@@ -443,7 +443,7 @@ void Sexy::Coin::Draw(Graphics* g)
 	}
 	else
 	{
-		if (mCoinType == 7 || mCoinType == 14)
+		if (mCoinType == COIN_TREASURE || mCoinType == SHELL_SACK)
 		{
 			if (isShell)
 			{
@@ -458,7 +458,7 @@ void Sexy::Coin::Draw(Graphics* g)
 		}
 		else // 120
 		{
-			if (mCoinType == 18)
+			if (mCoinType == COIN_PEANUT)
 			{
 				g->DrawImage(IMAGE_PEANUT, 0, 0);
 				g->SetColorizeImages(false);
@@ -552,7 +552,7 @@ void Sexy::Coin::MouseDown(int x, int y, int theClickCount)
 		return;
 	}
 
-	if (mCoinType == 18 && mUpdateCnt < 12)
+	if (mCoinType == COIN_PEANUT && mUpdateCnt < 12)
 		return;
 
 	if (mCoinType == COIN_NOTE || m0x198)
@@ -617,24 +617,24 @@ void Sexy::Coin::MouseDown(int x, int y, int theClickCount)
 
 	mMouseVisible = false;
 
-	if (mCoinType < 15 || mCoinType == COIN_SHRAPNEL_BOMB || mCoinType == 18)
+	if (mCoinType < COIN_NIKOPEARL || mCoinType == COIN_SHRAPNEL_BOMB || mCoinType == COIN_PEANUT)
 	{
 		m0x198 = true;
 		if (!aBoard->mIsBonusRound || !aBoard->Unk09(this))
 		{
-			if (mCoinType == COIN_DIAMOND || mCoinType == 5 || mCoinType == 11 || mCoinType == 12)
+			if (mCoinType == COIN_DIAMOND || mCoinType == COIN_DIAMOND_PENTA || mCoinType == SHELL_BLUE || mCoinType == SHELL_BLUE_PENTA)
 				aBoard->PlaySample(SOUND_DIAMOND_ID, 3, 1.0);
 			else
 			{
-				if (mCoinType == 18)
+				if (mCoinType == COIN_PEANUT)
 					aBoard->PlayChompSound(false);
 				else
 				{
-					if (mCoinType == COIN_PEARL || mCoinType == 13)
+					if (mCoinType == COIN_PEARL || mCoinType == SHELL_SPIRAL)
 						aBoard->PlaySample(SOUND_PEARL_ID, 3, 1.0);
 					else
 					{
-						if (mCoinType == 7 || mCoinType == 14)
+						if (mCoinType == COIN_TREASURE || mCoinType == SHELL_SACK)
 						{
 							aBoard->PlaySample(IsShell() ? SOUND_BONUSCOLLECT_ID : SOUND_TREASURE_ID, 3, 1.0);
 						}
@@ -722,19 +722,19 @@ int Sexy::Coin::GetValue()
 			return mComboCount * 3;
 		return 40;
 	}
-	if (mCoinType == COIN_DIAMOND || mCoinType == 11 || mCoinType == 5 || mCoinType == 12)
+	if (mCoinType == COIN_DIAMOND || mCoinType == SHELL_BLUE || mCoinType == COIN_DIAMOND_PENTA || mCoinType == SHELL_BLUE_PENTA)
 	{
 		if (IsShell())
 			return mComboCount * 5;
 		return 200;
 	}
-	if (mCoinType == COIN_PEARL || mCoinType == 13)
+	if (mCoinType == COIN_PEARL || mCoinType == SHELL_SPIRAL)
 	{
 		if (IsShell())
 			return mComboCount * 10;
 		return 500;
 	}
-	if (mCoinType == 7 || mCoinType == 14)
+	if (mCoinType == COIN_TREASURE || mCoinType == SHELL_SACK)
 	{
 		if (IsShell())
 			return mComboCount * 20;
@@ -752,7 +752,7 @@ int Sexy::Coin::GetValue()
 			return mComboCount * 5;
 		return 150;
 	}
-	if (mCoinType == 18)
+	if (mCoinType == COIN_PEANUT)
 	{
 		if (IsShell())
 			return mComboCount;
@@ -770,11 +770,11 @@ void Sexy::Coin::ReceiveMoney()
 void Sexy::Coin::PetCollected()
 {
 	ReceiveMoney();
-	if (mCoinType == COIN_DIAMOND || mCoinType == 5 || mCoinType == 11 || mCoinType == 12)
+	if (mCoinType == COIN_DIAMOND || mCoinType == COIN_DIAMOND_PENTA || mCoinType == SHELL_BLUE || mCoinType == SHELL_BLUE_PENTA)
 		mApp->mBoard->PlaySample(SOUND_DIAMOND_ID, 3, 1.0);
-	else if (mCoinType == COIN_PEARL || mCoinType == 13)
+	else if (mCoinType == COIN_PEARL || mCoinType == SHELL_SPIRAL)
 		mApp->mBoard->PlaySample(SOUND_PEARL_ID, 3, 1.0);
-	else if (mCoinType == 7 || mCoinType == 14)
+	else if (mCoinType == COIN_TREASURE || mCoinType == SHELL_SACK)
 		mApp->mBoard->PlaySample(IsShell() ? SOUND_BONUSCOLLECT_ID : SOUND_TREASURE_ID, 3, 1.0);
 	else
 		mApp->mBoard->PlayPointsSound();

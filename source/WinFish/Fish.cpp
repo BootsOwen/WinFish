@@ -1328,13 +1328,13 @@ void Fish::DropCoin()
                     aCoinType = -999;
             }
             else if (mSize == TYPE_MEDIUM_GUPPY)
-                aCoinType = 4;
+                aCoinType = COIN_DIAMOND;
             else if (mSize == TYPE_BIG_GUPPY)
-                aCoinType = 6;
+                aCoinType = COIN_PEARL;
             else if (mSize == TYPE_CROWNED_GUPPY)
                 aCoinType = 7;
             else
-                aCoinType = 2;
+                aCoinType = COIN_GOLD_C;
         }
 
         if (aCoinType != -999)

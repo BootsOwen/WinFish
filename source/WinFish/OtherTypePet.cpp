@@ -789,9 +789,9 @@ GameObject* Sexy::OtherTypePet::GetEntityToChase()
 		{
 			Coin* aCoin = aBoard->mCoinList->at(i);
 
-			if ((pentaInTank && aCoin->mCoinType != 10 && aCoin->mCoinType != 3) || !pentaInTank) // 104
+			if ((pentaInTank && aCoin->mCoinType != SHELL_STAR && aCoin->mCoinType != COIN_STAR) || !pentaInTank) // 104
 			{
-				if (aCoin->mCoinType != 17 && aCoin->mCoinType != 18 && !aCoin->m0x198)
+				if (aCoin->mCoinType != COIN_SHRAPNEL_BOMB && aCoin->mCoinType != COIN_PEANUT && !aCoin->m0x198)
 				{
 					if (mOtherTypePetType == PET_CLYDE)
 						if (RelaxModeCheck(aCoin))
@@ -1062,15 +1062,15 @@ void Sexy::OtherTypePet::CollideWithObject()
 		{
 			Coin* aCoin = mApp->mBoard->mCoinList->at(i);
 
-			if (!hasPenta || (hasPenta && aCoin->mCoinType != 3 && aCoin->mCoinType != 10))
+			if (!hasPenta || (hasPenta && aCoin->mCoinType != COIN_STAR && aCoin->mCoinType != SHELL_STAR))
 			{
-				if (!aCoin->m0x198 && aCoin->mCoinType != 18)
+				if (!aCoin->m0x198 && aCoin->mCoinType != COIN_PEANUT)
 				{
 					if (mOtherTypePetType == PET_CLYDE && RelaxModeCheck(aCoin))
 						continue;
 
 					if (mXD + 40.0 > aCoin->mX + 16 && mXD + 40.0 < aCoin->mX + 56 &&
-						mYD + 40.0 > aCoin->mY + 16 && mYD + 40.0 < aCoin->mY + 56 && aCoin->mCoinType < 15)
+						mYD + 40.0 > aCoin->mY + 16 && mYD + 40.0 < aCoin->mY + 56 && aCoin->mCoinType < COIN_SPECIAL)
 					{
 						aCoin->PetCollected();
 						aCoin->Remove();

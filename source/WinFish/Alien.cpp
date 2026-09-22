@@ -9,6 +9,7 @@
 #include "Fish.h"
 #include "Shadow.h"
 #include "Warp.h"
+#include "Coin.h"
 #include "Res.h"
 
 
@@ -1272,7 +1273,7 @@ void Sexy::Alien::Remove(bool removeShadow)
 	if (mMisslePtr)
 		mMisslePtr->Remove();
 	if (mApp->mBoard->mCyraxPtr == nullptr && removeShadow && CanDropCoin())
-		mApp->mBoard->DropCoin(mX + 25, mY + 25, 4, nullptr, -1.0, 0);
+		mApp->mBoard->DropCoin(mX + 25, mY + 25, COIN_DIAMOND, nullptr, -1.0, 0);
 
 	mApp->mBoard->mWidgetManager->RemoveWidget(this);
 	mApp->SafeDeleteWidget(this);

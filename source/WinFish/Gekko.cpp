@@ -324,7 +324,7 @@ Sexy::GameObject* Sexy::Gekko::FindNearestFood()
 	for (int i = 0; i < aBoard->mCoinList->size(); i++)
 	{
 		Coin* aFood = aBoard->mCoinList->at(i);
-		if (aFood->mCoinType == 18 && !aFood->m0x198)
+		if (aFood->mCoinType == CoinTypes::COIN_PEANUT && !aFood->m0x198)
 		{
 			int ax = (aFood->mX + 20) - aCenterX;
 			int ay = (aFood->mY + 20) - aCenterY;
@@ -359,7 +359,7 @@ void Sexy::Gekko::CollideWithFood()
 		for (int i = 0; i < aBoard->mCoinList->size(); i++)
 		{
 			Coin* aFood = aBoard->mCoinList->at(i);
-			if (aFood->mCoinType == 18 && !aFood->m0x198 && FoodCollided(aFood))
+			if (aFood->mCoinType == CoinTypes::COIN_PEANUT && !aFood->m0x198 && FoodCollided(aFood))
 				return;
 		}
 	}

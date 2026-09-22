@@ -1114,7 +1114,7 @@ void Sexy::GameObject::CopyBreederDataVT(Breeder* theBreeder)
 bool Sexy::GameObject::RelaxModeCheck(Coin* theCoin)
 {
 	if (mApp->mRelaxMode)
-		if (!mApp->mBoard->mPentaList->empty() && (theCoin->mCoinType == 2 || theCoin->mCoinType == 1))
+		if (!mApp->mBoard->mPentaList->empty() && (theCoin->mCoinType == COIN_GOLD_C || theCoin->mCoinType == COIN_SILVER_C))
 			return true;
 	return false;
 }

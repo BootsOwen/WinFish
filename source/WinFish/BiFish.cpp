@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Missle.h"
 #include "Shadow.h"
+#include "Coin.h"
 #include "Res.h"
 
 Sexy::BiFish::BiFish()
@@ -159,7 +160,7 @@ void Sexy::BiFish::DropCoin()
 
 	mCoinDropTimer = 0;
 	if (RelaxModeCanDrop())
-		mApp->mBoard->DropCoin(mX + 5, mY + 10, 2, nullptr, -1.0, 0);
+		mApp->mBoard->DropCoin(mX + 5, mY + 10, CoinTypes::COIN_GOLD_C, nullptr, -1.0, 0);
 }
 
 bool Sexy::BiFish::Hungry()

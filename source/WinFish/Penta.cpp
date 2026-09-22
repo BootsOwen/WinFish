@@ -431,7 +431,7 @@ bool Sexy::Penta::DropCoin()
 		}
 		if (RelaxModeCanDrop())
 		{
-			mApp->mBoard->DropCoin(mX + 5, mY - 12, 5, nullptr, -1.0, 0);
+			mApp->mBoard->DropCoin(mX + 5, mY - 12, COIN_DIAMOND_PENTA, nullptr, -1.0, 0);
 			return true;
 		}
 	}

@@ -373,9 +373,9 @@ bool Board::RemoveGameObjectFromLists(GameObject* theObject, bool aFlag)
 	case TYPE_COIN:
 	{
 		Coin* aCoin = (Coin*)theObject;
-		if (aCoin->m0x1a0 > 1 || aCoin->mCoinType == 15)
+		if (aCoin->m0x1a0 > 1 || aCoin->mCoinType == COIN_NIKOPEARL)
 			mNikoPearlCoinList->erase(std::remove(mNikoPearlCoinList->begin(), mNikoPearlCoinList->end(), aCoin), mNikoPearlCoinList->end());
-		if (aCoin->mCoinType == 16)
+		if (aCoin->mCoinType == COIN_NOTE)
 			mNoteList->erase(std::remove(mNoteList->begin(), mNoteList->end(), aCoin), mNoteList->end());
 		else
 			mCoinList->erase(std::remove(mCoinList->begin(), mCoinList->end(), aCoin), mCoinList->end());
@@ -5146,7 +5146,7 @@ void Sexy::Board::GetExoticFoodsInTank(int* theInfoArray)
 	for (int i = 0; i < mCoinList->size(); i++)
 	{
 		Coin* anObj = mCoinList->at(i);
-		if (anObj->mCoinType == 3)
+		if (anObj->mCoinType == COIN_STAR)
 			theInfoArray[1]++;
 	}
 

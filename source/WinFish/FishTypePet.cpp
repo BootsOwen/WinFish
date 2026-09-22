@@ -542,7 +542,7 @@ void Sexy::FishTypePet::DropCoin()
 		{
 			mCoinDropTimer = 0;
 			if(CanDropCoin())
-				mApp->mBoard->DropCoin(mX + 15, mY + 10, 2, nullptr, -1.0, 0);
+				mApp->mBoard->DropCoin(mX + 15, mY + 10, COIN_GOLD_C, nullptr, -1.0, 0);
 		}
 	}
 	else if (mFishTypePetType == PET_NOSTRADAMUS)
@@ -619,7 +619,7 @@ void Sexy::FishTypePet::DropCoin()
 		if (mCoinDropTimer == mCoinDropT - 100)
 		{
 			gMerylActive = true;
-			mApp->mBoard->DropCoin(mX + 15, mY - 5, 16, nullptr, -1.0, 0);
+			mApp->mBoard->DropCoin(mX + 15, mY - 5, COIN_NOTE, nullptr, -1.0, 0);
 			mApp->mBoard->PlaySample(SOUND_SING_ID, 3, 1.0);
 		}
 		else if(mCoinDropTimer >= mCoinDropT)
@@ -1203,12 +1203,12 @@ Sexy::GameObject* Sexy::FishTypePet::FindNearestFood()
 		for (int i = 0; i < mApp->mBoard->mCoinList->size(); i++)
 		{
 			Coin* anObj = mApp->mBoard->mCoinList->at(i);
-			if (anObj->mCoinType != 17)
+			if (anObj->mCoinType != COIN_SHRAPNEL_BOMB)
 			{ 
-				if ((anObj->mCoinType == 3 || anObj->mCoinType == 10) && aPentaCnt != 0)
+				if ((anObj->mCoinType == COIN_STAR || anObj->mCoinType == SHELL_STAR) && aPentaCnt != 0)
 					continue;
 
-				if (!anObj->m0x198 && anObj->mCoinType != 18 && !RelaxModeCheck(anObj))
+				if (!anObj->m0x198 && anObj->mCoinType != COIN_PEANUT && !RelaxModeCheck(anObj))
 				{
 					if (mApp->IsScreenSaver() && anObj->mUpdateCnt > gUnkInt11)
 						continue;
@@ -1387,12 +1387,12 @@ void Sexy::FishTypePet::CollideWithFood()
 			int aCoinY = aCoin->mY + 40;
 
 			if (abs(mXD + 40.0 - aCoinX) < 30.0 && abs(mYD + 40.0 - aCoinY) < 30.0 &&
-				aCoin->mCoinType != 17 && ((aCoin->mCoinType != 3 && aCoin->mCoinType != 10) || noPenta) &&
-				!aCoin->m0x198 && aCoin->mCoinType != 18 && (!RelaxModeCheck(aCoin) && (!isScrSvr || aCoin->mUpdateCnt <= gUnkInt11)))
+				aCoin->mCoinType != COIN_SHRAPNEL_BOMB && ((aCoin->mCoinType != COIN_STAR && aCoin->mCoinType != SHELL_STAR) || noPenta) &&
+				!aCoin->m0x198 && aCoin->mCoinType != COIN_PEANUT && (!RelaxModeCheck(aCoin) && (!isScrSvr || aCoin->mUpdateCnt <= gUnkInt11)))
 			{
 				aCoin->Remove();
 				mApp->mBoard->DropCoin(aCoin->mX, mYD - 25.0, 
-					(aCoin->mCoinType < 8 ? aCoin->mCoinType + 7 : aCoin->mCoinType),
+					(aCoin->mCoinType < SHELL_START ? aCoin->mCoinType + COIN_END : aCoin->mCoinType),
 					nullptr, -1.0, aCoin->mUpdateCnt);
 				break;
 			}
@@ -1738,7 +1738,7 @@ bool Sexy::FishTypePet::HandleMouseDown(int x, int y, int theClickCount)
 
 				aFish->Die(false);
 				if (aCounter < aMaxDropCount)
-					mApp->mBoard->DropCoin(aFish->mX + 15, aFish->mY + 10, 5, nullptr, -1, 0);
+					mApp->mBoard->DropCoin(aFish->mX + 15, aFish->mY + 10, COIN_DIAMOND_PENTA, nullptr, -1, 0);
 
 				mApp->mBoard->SpawnShot(aFish->mX, aFish->mY, mApp->mSeed->Next() % 3 + 3);
 				aCounter++;
@@ -1758,7 +1758,7 @@ bool Sexy::FishTypePet::HandleMouseDown(int x, int y, int theClickCount)
 				FishTypePet* aPet = aFTPVector.at(i);
 
 				aPet->RemoveHelper02(true);
-				mApp->mBoard->DropCoin(mXD + 15, mYD + 10, 5, nullptr, -1, 0);
+				mApp->mBoard->DropCoin(mXD + 15, mYD + 10, COIN_DIAMOND_PENTA, nullptr, -1, 0);
 				mApp->mBoard->SpawnShot(mXD, mYD, mApp->mSeed->Next() % 3 + 3);
 				aCounter++;
 			}

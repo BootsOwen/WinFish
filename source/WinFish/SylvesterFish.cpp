@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Missle.h"
 #include "Shadow.h"
+#include "Coin.h"
 #include "Res.h"
 
 Sexy::SylvesterFish::SylvesterFish()
@@ -154,7 +155,7 @@ void Sexy::SylvesterFish::DropCoin()
 	{
 		mCoinDropTimer = 0;
 		if (RelaxModeCanDrop())
-			mApp->mBoard->DropCoin(mX + 5, mY + 10, mSize == SIZE_MEDIUM ? 6 : 7, nullptr, -1.0, 0);
+			mApp->mBoard->DropCoin(mX + 5, mY + 10, mSize == SIZE_MEDIUM ? COIN_PEARL : COIN_TREASURE, nullptr, -1.0, 0);
 	}
 }
 

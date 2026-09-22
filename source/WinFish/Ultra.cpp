@@ -7,6 +7,7 @@
 #include "Oscar.h"
 #include "Missle.h"
 #include "Shadow.h"
+#include "Coin.h"
 #include "Res.h"
 
 Sexy::Ultra::Ultra()
@@ -110,7 +111,7 @@ void Sexy::Ultra::DropCoin()
 	{
 		mCoinDropTimer = 0;
 		if (RelaxModeCanDrop())
-			mApp->mBoard->DropCoin(mX + 40, mY + 90, 7, nullptr, -1.0, 0);
+			mApp->mBoard->DropCoin(mX + 40, mY + 90, COIN_TREASURE, nullptr, -1.0, 0);
 	}
 }
 

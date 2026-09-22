@@ -8,6 +8,7 @@
 #include "Warp.h"
 #include "Missle.h"
 #include "Shadow.h"
+#include "Coin.h"
 #include "Res.h"
 
 using namespace Sexy;
@@ -293,7 +294,7 @@ void Sexy::Bilaterus::Remove(bool flag)
 	if (mApp->mBoard->mCyraxPtr == nullptr)
 	{
 		if (CanDropCoin() && flag)
-			mApp->mBoard->DropCoin(mX + 25, mY + 25, 4, nullptr, -1.0, 0);
+			mApp->mBoard->DropCoin(mX + 25, mY + 25, CoinTypes::COIN_DIAMOND, nullptr, -1.0, 0);
 	}
 
 	if (flag)
