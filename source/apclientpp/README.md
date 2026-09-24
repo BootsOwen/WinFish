@@ -14,14 +14,19 @@ Only headers and license files are kept; tests, docs and build scripts were drop
 Do not bump asio past 1.31 without also updating websocketpp: websocketpp 0.8.2 still uses `io_service`,
 which asio 1.33 removed.
 
-## Not included
+## Prebuilt libraries
 
-- **OpenSSL** (libssl, libcrypto) for `wss://`. archipelago.gg requires it.
-- **zlib** for permessage-deflate compression.
+| Folder | Library | Version | License |
+|---|---|---|---|
+| `openssl/` | OpenSSL (libssl, libcrypto), for `wss://` | 3.6.4 | Apache-2.0 (`openssl/LICENSE.txt`) |
+| `zlib/` | zlib, for permessage-deflate compression | 1.3.2 | zlib (`zlib/LICENSE.txt`) |
 
-The game is 32-bit and links the static CRT (`/MT`, `/MTd`), so use static x86 builds,
-e.g. vcpkg `openssl:x86-windows-static` and `zlib:x86-windows-static`.
-Ship a CA bundle (curl's `cacert.pem`) next to the exe and pass its path to the `APClient` constructor.
+Built with vcpkg `openssl:x86-windows-static` and `zlib:x86-windows-static`, because the game is 32-bit and links
+the static CRT. `lib/x86-MT` is the release build (`/MT`) and `lib/x86-MTd` is the debug build (`/MTd`).
+vcpkg's debug `zlibd.lib` is renamed to `zlib.lib` so both configurations link the same name.
+
+`cacert.pem` is curl's CA bundle (Mozilla data, 2026-08-13). The post-build step copies it next to the exe;
+pass its path to the `APClient` constructor.
 
 ## Project settings
 

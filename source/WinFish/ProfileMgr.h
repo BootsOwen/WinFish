@@ -43,6 +43,11 @@ namespace Sexy
 		int mTimeTrialScores[4];
 		int mChallengeScores[4];
 
+		// Archipelago connection for this profile; an empty slot means the profile isn't an AP profile.
+		std::string mAPServer;
+		std::string mAPSlot;
+		std::string mAPPassword;
+
 	public:
 		UserProfile();
 
