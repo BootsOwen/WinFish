@@ -24,6 +24,7 @@ namespace Sexy
 	class HelpScreen;
 
 	class WorkerThread;
+	class APBridge;
 	class HighScoreMgr;
 	class ProfileMgr;
 	class UserProfile;
@@ -249,6 +250,11 @@ namespace Sexy
 		ProfileMgr*						mProfileMgr;
 		OtherTypePet*					mPrestoPtr;
 		UserProfile*					mCurrentProfile;
+		APBridge*						mAPBridge;
+		UserProfile*					mAPProfile;		// profile mAPBridge was last set up for
+		std::string						mAPServer;		// its settings at that time
+		std::string						mAPSlot;
+		std::string						mAPPassword;
 
 	public:
 		WinFishApp();
@@ -318,6 +324,7 @@ namespace Sexy
 		void						LeaveGameBoard();
 
 		void						UpdatePlayData();
+		void						UpdateArchipelago();
 		bool						CheckTrialEnded();
 
 		void						DoTrialVersionExpiredDialog();

@@ -36,6 +36,7 @@
 #include "SimSetupScreen.h"
 
 #include "WorkerThread.h"
+#include "APBridge.h"
 #include "HighScoreMgr.h"
 #include "ProfileMgr.h"
 #include "FishSongMgr.h"
@@ -240,6 +241,8 @@ WinFishApp::WinFishApp()
 	mScreenSaverRegPath = mScreenSaverRegKey;
 	mYieldMainThread = false;
 	mCurrentProfile = NULL;
+	mAPBridge = NULL;
+	mAPProfile = NULL;
 
 	mSeed = new MTRand(Rand());
 
@@ -367,6 +370,9 @@ Sexy::WinFishApp::~WinFishApp()
 		mWidgetManager->RemoveWidget(mGameSelector);
 	delete mGameSelector;
 
+	delete mAPBridge;
+	mAPBridge = NULL;
+
 	if(mProfileMgr)
 		delete mProfileMgr;
 	if(mHighScoreMgr)
@@ -387,7 +393,7 @@ void Sexy::WinFishApp::Init()
 		MkDir(GetAppDataFolder());
 		AllowAllAccess(GetAppDataFolder());
 		InitUserDirectories("userdata");
-		//	TODO WinFishAppMoveOldUserdataFolder 
+		//	TODO WinFishAppMoveOldUserdataFolder
 		//	Migrate userdata from game folder to program data
 	}
 
@@ -395,6 +401,7 @@ void Sexy::WinFishApp::Init()
 	{
 		char aModuleFileName[260];
 		GetModuleFileNameA(NULL, aModuleFileName, sizeof(aModuleFileName));
+		mAPBridge = new APBridge(GetAppDataFolder() + "userdata\\", GetFileDir(aModuleFileName, true) + "cacert.pem");
 		SexyString aModulePath = aModuleFileName;
 
 		if (CheckForVista())
@@ -2279,6 +2286,8 @@ void Sexy::WinFishApp::LogScreenSaverError(const std::string& theError)
 
 void Sexy::WinFishApp::UpdateFrames()
 {
+	UpdateArchipelago();
+
 	if (!gUnkBool01)
 	{
 		if (gDoHundredUpdates)
@@ -2299,6 +2308,37 @@ void Sexy::WinFishApp::UpdateFrames()
 	}
 
 	SexyApp::UpdateFrames();
+}
+
+void Sexy::WinFishApp::UpdateArchipelago()
+{
+	if (mAPBridge == NULL)
+		return;
+
+	// Reconnect whenever the current profile or its AP settings change; this covers profile
+	// switch, rename and delete without hooking every place that assigns mCurrentProfile.
+	std::string aServer, aSlot, aPassword;
+	if (mCurrentProfile != NULL)
+	{
+		aServer = mCurrentProfile->mAPServer;
+		aSlot = mCurrentProfile->mAPSlot;
+		aPassword = mCurrentProfile->mAPPassword;
+	}
+
+	if (mCurrentProfile != mAPProfile || aServer != mAPServer || aSlot != mAPSlot || aPassword != mAPPassword)
+	{
+		mAPProfile = mCurrentProfile;
+		mAPServer = aServer;
+		mAPSlot = aSlot;
+		mAPPassword = aPassword;
+
+		if (aServer.empty() || aSlot.empty())
+			mAPBridge->Disconnect();
+		else
+			mAPBridge->Connect(aServer, aSlot, aPassword);
+	}
+
+	mAPBridge->Update();
 }
 
 void Sexy::WinFishApp::TitleScreenIsFinished()
