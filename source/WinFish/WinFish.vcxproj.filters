@@ -63,6 +63,9 @@
     <ClCompile Include="WinFishApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="APBridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Board.cpp">
       <Filter>Source Files\Screen Source</Filter>
     </ClCompile>
@@ -282,6 +285,9 @@
       <Filter>Header Files\Screen Include</Filter>
     </ClInclude>
     <ClInclude Include="WinFishApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="APBridge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">

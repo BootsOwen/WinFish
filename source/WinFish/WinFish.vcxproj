@@ -78,7 +78,7 @@
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <TargetName>Insaniquarium</TargetName>
-    <LibraryPath>$(SolutionDir)source\SexyAppFramework\DebugVS2005;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)source\SexyAppFramework\DebugVS2005;$(SolutionDir)source\apclientpp\openssl\lib\x86-MTd;$(SolutionDir)source\apclientpp\zlib\lib\x86-MTd;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -107,7 +107,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libcmtd.lib;SexyAppFramework.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;wsock32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;libcmtd.lib;SexyAppFramework.lib;ws2_32.lib;crypt32.lib;libssl.lib;libcrypto.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>false</OptimizeReferences>
       <OutputFile>$(OutDir)Insaniquarium.exe</OutputFile>
     </Link>
@@ -118,7 +118,8 @@ xcopy "$(SolutionDir)music" "$(TargetDir)music\" /E /I /Y
 xcopy "$(SolutionDir)sounds" "$(TargetDir)sounds\" /E /I /Y
 xcopy "$(SolutionDir)properties" "$(TargetDir)properties\" /E /I /Y
 xcopy "$(SolutionDir)data" "$(TargetDir)data\" /E /I /Y
-xcopy "$(SolutionDir)fishsongs" "$(TargetDir)fishsongs\" /E /I /Y</Command>
+xcopy "$(SolutionDir)fishsongs" "$(TargetDir)fishsongs\" /E /I /Y
+copy "$(SolutionDir)source\apclientpp\cacert.pem" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -168,6 +169,12 @@ xcopy "$(SolutionDir)fishsongs" "$(TargetDir)fishsongs\" /E /I /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Alien.cpp" />
+    <ClCompile Include="APBridge.cpp">
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)source\apclientpp;$(SolutionDir)source\apclientpp\wswrap\include;$(SolutionDir)source\apclientpp\websocketpp;$(SolutionDir)source\apclientpp\asio\include;$(SolutionDir)source\apclientpp\json\include;$(SolutionDir)source\apclientpp\openssl\include;$(SolutionDir)source\apclientpp\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>ASIO_STANDALONE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;AP_NO_SCHEMA;_WEBSOCKETPP_CPP11_STL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/Zc:__cplusplus /bigobj %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="BallFish.cpp" />
     <ClCompile Include="BetaSupport.cpp" />
     <ClCompile Include="BiFish.cpp" />
@@ -244,6 +251,7 @@ xcopy "$(SolutionDir)fishsongs" "$(TargetDir)fishsongs\" /E /I /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alien.h" />
+    <ClInclude Include="APBridge.h" />
     <ClInclude Include="BallFish.h" />
     <ClInclude Include="BetaSupport.h" />
     <ClInclude Include="BiFish.h" />

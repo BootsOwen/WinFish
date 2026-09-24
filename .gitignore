@@ -453,3 +453,5 @@ sounds/
 *.dat
 **/[Uu]serdata/
 UnusedStuff/
+# Vendored websocketpp has a source folder named debug/
+!source/apclientpp/websocketpp/websocketpp/transport/debug/
