@@ -216,6 +216,9 @@
     <ClCompile Include="NewUserDialog.cpp">
       <Filter>Source Files\Widgets Source\Dialog Source</Filter>
     </ClCompile>
+    <ClCompile Include="ArchipelagoDialog.cpp">
+      <Filter>Source Files\Widgets Source\Dialog Source</Filter>
+    </ClCompile>
     <ClCompile Include="OptionsDialog.cpp">
       <Filter>Source Files\Widgets Source\Dialog Source</Filter>
     </ClCompile>
@@ -438,6 +441,9 @@
       <Filter>Header Files\Widgets Include\Dialog Include</Filter>
     </ClInclude>
     <ClInclude Include="NewUserDialog.h">
+      <Filter>Header Files\Widgets Include\Dialog Include</Filter>
+    </ClInclude>
+    <ClInclude Include="ArchipelagoDialog.h">
       <Filter>Header Files\Widgets Include\Dialog Include</Filter>
     </ClInclude>
     <ClInclude Include="OptionsDialog.h">

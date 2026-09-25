@@ -179,6 +179,7 @@ namespace Sexy
 		DIALOG_TIMES_UP,
 		DIALOG_VIRTUAL,
 		DIALOG_GIVE_SHELLS,
+		DIALOG_ARCHIPELAGO,
 		DIALOG_END_ID
 	};
 
@@ -337,6 +338,8 @@ namespace Sexy
 		void						DoGiveDialog();
 		void						DoDeleteWarningDialog(SexyString& theName);
 		void						DoRenameDialog(SexyString theUserName);
+		void						DoArchipelagoDialog(const SexyString& theUserName);
+		void						ApplyArchipelagoDialog(bool doApply);
 		void						DoUpdateCheckDialog();
 		void						DoLeaveGameDialog();
 		void						DoLostFocusDialog();

@@ -37,6 +37,7 @@
 
 #include "WorkerThread.h"
 #include "APBridge.h"
+#include "ArchipelagoDialog.h"
 #include "HighScoreMgr.h"
 #include "ProfileMgr.h"
 #include "FishSongMgr.h"
@@ -920,6 +921,9 @@ void Sexy::WinFishApp::ButtonDepress(int theId)
 		break;
 	case DIALOG_ARE_YOU_SURE_DELETE:
 		DeleteUser(true);
+		break;
+	case DIALOG_ARCHIPELAGO:
+		ApplyArchipelagoDialog(true);
 		break;
 	case DIALOG_RENAME:
 		RenameUser(true);
@@ -2843,6 +2847,38 @@ void Sexy::WinFishApp::DoRenameDialog(SexyString theUserName)
 	aRenameDialog->mEditWidget->mCursorPos = theUserName.size();
 	aRenameDialog->mEditWidget->mHilitePos = 0;
 	AddDialog(DIALOG_RENAME, aRenameDialog);
+}
+
+void Sexy::WinFishApp::DoArchipelagoDialog(const SexyString& theUserName)
+{
+	UserProfile* aProf = mProfileMgr->GetUserProfile(theUserName);
+	if (aProf == NULL)
+		return;
+
+	KillDialog(DIALOG_ARCHIPELAGO);
+	ArchipelagoDialog* aDia = new ArchipelagoDialog(this, theUserName, aProf);
+	int aPrefHght = aDia->GetPreferredHeight(420);
+	aDia->Resize((mWidth - 420) / 2, (mHeight - aPrefHght) / 2, 420, aPrefHght);
+	AddDialog(DIALOG_ARCHIPELAGO, aDia);
+}
+
+void Sexy::WinFishApp::ApplyArchipelagoDialog(bool doApply)
+{
+	ArchipelagoDialog* aDia = (ArchipelagoDialog*)GetDialog(DIALOG_ARCHIPELAGO);
+	if (aDia == NULL)
+		return;
+
+	if (doApply)
+	{
+		UserProfile* aProf = mProfileMgr->GetUserProfile(aDia->mUserName);
+		if (aProf != NULL)
+		{
+			// UpdateArchipelago notices the change and reconnects if this is the current profile.
+			aDia->ApplyTo(aProf);
+			aProf->Save();
+		}
+	}
+	KillDialog(DIALOG_ARCHIPELAGO);
 }
 
 void Sexy::WinFishApp::UserDialogOkPressed(bool applyChanges)

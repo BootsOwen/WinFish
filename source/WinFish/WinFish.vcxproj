@@ -173,6 +173,7 @@ copy "$(SolutionDir)source\apclientpp\cacert.pem" "$(TargetDir)"</Command>
       <PreprocessorDefinitions>ASIO_STANDALONE;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;AP_NO_SCHEMA;_WEBSOCKETPP_CPP11_STL_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="ArchipelagoDialog.cpp" />
     <ClCompile Include="BallFish.cpp" />
     <ClCompile Include="BetaSupport.cpp" />
     <ClCompile Include="BiFish.cpp" />
@@ -250,6 +251,7 @@ copy "$(SolutionDir)source\apclientpp\cacert.pem" "$(TargetDir)"</Command>
   <ItemGroup>
     <ClInclude Include="Alien.h" />
     <ClInclude Include="APBridge.h" />
+    <ClInclude Include="ArchipelagoDialog.h" />
     <ClInclude Include="BallFish.h" />
     <ClInclude Include="BetaSupport.h" />
     <ClInclude Include="BiFish.h" />
