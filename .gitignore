@@ -444,7 +444,7 @@ bass.dll
 .vs/
 data/
 fishsongs/
-images/
+/images/
 music/
 properties/
 sounds/

@@ -36,11 +36,15 @@ namespace Sexy
 		State GetState() const { return mState; }
 		const std::string& GetLastError() const { return mLastError; }
 
+		// One-line description for the UI; empty while disconnected.
+		std::string GetStatusText() const;
+
 	private:
 		APClient* mClient;
 		State mState;
 		std::string mDataFolder;
 		std::string mCertFile;
+		std::string mServer;
 		std::string mSlot;
 		std::string mPassword;
 		std::string mLastError;

@@ -29,6 +29,7 @@ void APBridge::Connect(const std::string& theServer, const std::string& theSlot,
 {
 	Disconnect();
 
+	mServer = theServer;
 	mSlot = theSlot;
 	mPassword = thePassword;
 	mLastError.clear();
@@ -84,4 +85,24 @@ void APBridge::Update()
 {
 	if (mClient != NULL)
 		mClient->poll();
+}
+
+std::string APBridge::GetStatusText() const
+{
+	switch (mState)
+	{
+	case AP_SOCKET_CONNECTING:
+		// apclientpp keeps retrying; a socket error here just means the last attempt failed.
+		if (!mLastError.empty())
+			return "Archipelago: can't reach " + mServer + ", retrying...";
+		return "Archipelago: connecting to " + mServer + "...";
+	case AP_SLOT_CONNECTING:
+		return "Archipelago: logging in as " + mSlot + "...";
+	case AP_SLOT_CONNECTED:
+		return "Archipelago: connected as " + mSlot;
+	case AP_SLOT_REFUSED:
+		return "Archipelago: refused (" + mLastError + ")";
+	default:
+		return "";
+	}
 }

@@ -7,6 +7,7 @@
 #include "WinFishApp.h"
 #include "WinFishCommon.h"
 #include "ProfileMgr.h"
+#include "APBridge.h"
 #include "Res.h"
 
 Sexy::GameSelector::GameSelector(WinFishApp* theApp)
@@ -244,6 +245,7 @@ void Sexy::GameSelector::Draw(Graphics* g)
 
 	g->DrawImageAnim(IMAGE_MERYLBLINK, 139, 196, mMerylBlinkTimer);
 	g->DrawImageAnim(IMAGE_MERYLTAIL, 39, 301, mMerylFlopTimer);
+	g->DrawImage(IMAGE_MERYLSHIRT, 102, 247);
 
 	if (mSpeechFadeTimer > 0)
 	{
@@ -285,6 +287,25 @@ void Sexy::GameSelector::DrawOverlay(Graphics* g)
 	{
 		SexyString aStr = StrFormat("%d Shells", aProf->mShells);
 		g->DrawString(aStr, (-g->GetFont()->StringWidth(aStr) / 2) + 465, 346);
+	}
+
+	// Archipelago status, bottom left on the sea floor under Meryl.
+	if (mApp->mAPBridge)
+	{
+		std::string anAPStatus = mApp->mAPBridge->GetStatusText();
+		if (!anAPStatus.empty())
+		{
+			switch (mApp->mAPBridge->GetState())
+			{
+			case APBridge::AP_SLOT_CONNECTED:	g->SetColor(Color(0x80, 0xff, 0x80)); break;
+			case APBridge::AP_SLOT_REFUSED:		g->SetColor(Color(0xff, 0x80, 0x80)); break;
+			default:							g->SetColor(Color(0xe1, 0xfa, 0xfa)); break;
+			}
+			// The open area ends where the button panel starts (x ~ 320).
+			if (g->GetFont()->StringWidth(anAPStatus) > 300)
+				g->SetFont(FONT_TINY);
+			g->DrawString(anAPStatus, 12, 470);
+		}
 	}
 }
 
