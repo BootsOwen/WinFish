@@ -454,6 +454,8 @@ void Sexy::UserProfile::Init()
     mAPServer.clear();
     mAPSlot.clear();
     mAPPassword.clear();
+    mAPSeed.clear();
+    mAPItemIndex = 0;
 }
 
 void Sexy::UserProfile::SetCheatFlag(char thePos, bool theFlag)
@@ -499,8 +501,8 @@ void Sexy::UserProfile::SyncData(DataSync& theDataSync)
     if (theReader)
         Init();
 
-    // 0x80000000 is the original game's format; 0x80000001 appends the Archipelago fields.
-    uint aVer = 0x80000001;
+    // 0x80000000 is the original game's format.
+    uint aVer = 0x80000002;
     theDataSync.SyncLong(aVer);
 
     bool unkFlag = false;
@@ -571,6 +573,12 @@ void Sexy::UserProfile::SyncData(DataSync& theDataSync)
         theDataSync.SyncString(mAPServer);
         theDataSync.SyncString(mAPSlot);
         theDataSync.SyncString(mAPPassword);
+    }
+
+    if (aVer >= 0x80000002)
+    {
+        theDataSync.SyncString(mAPSeed);
+        theDataSync.SyncLong(mAPItemIndex);
     }
 
     if (theReader)
