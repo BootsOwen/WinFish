@@ -329,6 +329,8 @@ namespace Sexy
 
 	bool ExtractArchipelagoResources(ResourceManager* theMgr);
 	extern Image* IMAGE_MERYLSHIRT;
+	extern Image* IMAGE_ARCHIBALD;
+	extern Image* IMAGE_SCL_ARCHIBALD;
 
 	// Register Resources
 	bool ExtractRegisterResources(ResourceManager* theMgr);
@@ -614,6 +616,8 @@ namespace Sexy
 		IMAGE_SCL_BREEDER_ID,
 		IMAGE_SCL_ULTRA_ID,
 		IMAGE_MERYLSHIRT_ID,
+		IMAGE_ARCHIBALD_ID,
+		IMAGE_SCL_ARCHIBALD_ID,
 		SOUND_AWOOGA_ID,
 		SOUND_START_ID = SOUND_AWOOGA_ID,
 		SOUND_APPLAUSE_ID,
