@@ -44,7 +44,6 @@
 
 #include "MoneyDialog.h"
 #include "ContinueDialog.h"
-#include "NewUserDialog.h"
 #include "OptionsDialog.h"
 #include "UserDialog.h"
 #include "UpdateCheckDialog.h"
@@ -763,14 +762,8 @@ void Sexy::WinFishApp::ButtonDepress(int theId)
 				case 3000 + DIALOG_USER_DIALOG:
 					UserDialogOkPressed(false);
 					break;
-				case 3000 + DIALOG_NEW_USER:
-					MakeNewUser(false);
-					break;
 				case 3000 + DIALOG_ARE_YOU_SURE_DELETE:
 					DeleteUser(false);
-					break;
-				case 3000 + DIALOG_RENAME:
-					RenameUser(false);
 					break;
 				case 3000 + DIALOG_PET_DIALOG:
 					ApplyPrestoMorph(-1);
@@ -920,33 +913,11 @@ void Sexy::WinFishApp::ButtonDepress(int theId)
 	case DIALOG_USER_DIALOG:
 		UserDialogOkPressed(true);
 		break;
-	case DIALOG_NEW_USER:
-		MakeNewUser(true);
-		break;
 	case DIALOG_ARE_YOU_SURE_DELETE:
 		DeleteUser(true);
 		break;
 	case DIALOG_ARCHIPELAGO:
 		ApplyArchipelagoDialog(true);
-		break;
-	case DIALOG_RENAME:
-		RenameUser(true);
-		break;
-	case DIALOG_INFO_NEW_USER:
-	{
-		KillDialog(DIALOG_INFO_NEW_USER);
-		NewUserDialog* aDia = (NewUserDialog*)GetDialog(DIALOG_NEW_USER);
-		if (aDia)
-			mWidgetManager->SetFocus(aDia->mEditWidget);
-		break;
-	}
-	case DIALOG_NAME_CONFLICT:
-	{
-		KillDialog(DIALOG_NAME_CONFLICT);
-		NewUserDialog* aDia = (NewUserDialog*)GetDialog(DIALOG_RENAME);
-		if (aDia)
-			mWidgetManager->SetFocus(aDia->mEditWidget);
-	}
 		break;
 	case DIALOG_RESTART_GAME:
 		RestartLevel();
@@ -2095,15 +2066,6 @@ void Sexy::WinFishApp::DoContinueDialog()
 	AddDialog(DIALOG_CONTINUE_GAME, aDia);
 }
 
-void Sexy::WinFishApp::DoNewUserDialog()
-{
-	KillDialog(DIALOG_NEW_USER);
-	NewUserDialog* aDia = new NewUserDialog(this, false);
-	int aPrefHght = aDia->GetPreferredHeight(400);
-	aDia->Resize((mWidth - 400) / 2, (mHeight - aPrefHght) / 2, 400, aPrefHght);
-	AddDialog(DIALOG_NEW_USER, aDia);
-}
-
 void Sexy::WinFishApp::StartGame()
 {
 	mGameNotPlayed = false;
@@ -2145,58 +2107,6 @@ bool Sexy::WinFishApp::LoadBoardGame()
 			DoContinueDialog();
 	}
 	return aSuccess;
-}
-
-void Sexy::WinFishApp::MakeNewUser(bool makeUser)
-{
-	NewUserDialog* aDia =(NewUserDialog*) GetDialog(DIALOG_NEW_USER);
-	if (!aDia)
-		return;
-
-	SexyString aNewUserName = aDia->CleanString();
-
-	if (makeUser && aNewUserName.size() == 0)
-	{
-		DoDialog(DIALOG_INFO_NEW_USER, true, "Enter Your Name", "Please enter your name to create a new user profile for storing high score data and game progress.", "OK", Dialog::BUTTONS_FOOTER);
-		return;
-	}
-	else
-	{
-		if (mCurrentProfile || (makeUser && aNewUserName.size() != 0))
-		{
-			if (!makeUser)
-			{
-				KillDialog(DIALOG_NEW_USER);
-				return;
-			}
-			else
-			{
-				UserProfile* aProf = mProfileMgr->MakeNewUser(&aNewUserName);
-				if (!aProf)
-				{
-					DoDialog(DIALOG_INFO_NEW_USER, true, "Name Conflict",
-						"The name you entered is already being used.  Please enter a unique player name.", 
-						"OK", Dialog::BUTTONS_FOOTER);
-					return;
-				}
-				else
-				{
-					mProfileMgr->SaveUsersDat();
-					mCurrentProfile = aProf;
-					KillDialog(DIALOG_USER_DIALOG);
-					KillDialog(DIALOG_NEW_USER);
-					mWidgetManager->MarkAllDirty();
-					if (mGameSelector != nullptr);
-					return;
-				}
-			}
-		}
-
-		DoDialog(DIALOG_INFO_NEW_USER, true, "Enter Your Name",
-			"Please enter your name to create a new user profile for storing high score data and game progress.", 
-			"OK", Dialog::BUTTONS_FOOTER);
-		return;
-	}
 }
 
 void Sexy::WinFishApp::CreateBoard()
@@ -2776,47 +2686,6 @@ void Sexy::WinFishApp::DoDeleteWarningDialog(SexyString& theName)
 	DoDialog(DIALOG_ARE_YOU_SURE_DELETE, true, "Are You Sure?", StrFormat("This will permanently remove \'%s\' from the player roster!", theName.c_str()), "", Dialog::BUTTONS_YES_NO);
 }
 
-void Sexy::WinFishApp::RenameUser(bool makeUser)
-{
-	if (!makeUser)
-	{
-		KillDialog(DIALOG_RENAME);
-		return;
-	}
-
-	UserDialog* anUserDialog = (UserDialog*)GetDialog(DIALOG_USER_DIALOG);
-	NewUserDialog* aRenameDialog = (NewUserDialog*)GetDialog(DIALOG_RENAME);
-
-	if (!anUserDialog || !aRenameDialog)
-		return;
-
-	SexyString anOldName = anUserDialog->GetSelectedUserName();
-	SexyString aNewName = aRenameDialog->CleanString();
-
-	if (aNewName.size() > 0)
-	{
-		UserProfile* aProf = mProfileMgr->GetUserProfile(anOldName);
-		UserProfile* aCurProf = mCurrentProfile;
-		bool aSuccess = mProfileMgr->RenameUser(anOldName, aNewName);
-		if (!aSuccess)
-		{
-			DoDialog(DIALOG_NAME_CONFLICT, true, "Name Conflict", "The name you entered is already being used.  Please enter a unique player name.", "OK", Dialog::BUTTONS_FOOTER);
-			return;
-		}
-
-		mProfileMgr->SaveUsersDat();
-		if (aProf == aCurProf)
-			mCurrentProfile = mProfileMgr->GetUserProfile(aNewName);
-
-		int aSelIdx = anUserDialog->mListWidget->mSelectIdx;
-		if (aSelIdx > 0)
-			anUserDialog->mListWidget->SetLine(aSelIdx, aNewName);
-
-		mWidgetManager->MarkAllDirty();
-		KillDialog(DIALOG_RENAME);
-	}
-}
-
 void Sexy::WinFishApp::DeleteUser(bool deleteUser)
 {
 	KillDialog(DIALOG_ARE_YOU_SURE_DELETE);
@@ -2851,18 +2720,6 @@ void Sexy::WinFishApp::DeleteUser(bool deleteUser)
 	if (!mCurrentProfile)
 		DoArchipelagoDialog("");
 	mWidgetManager->MarkAllDirty();
-}
-
-void Sexy::WinFishApp::DoRenameDialog(SexyString theUserName)
-{
-	KillDialog(DIALOG_RENAME);
-	NewUserDialog* aRenameDialog = new NewUserDialog(this, true);
-	int aPrefHght = aRenameDialog->GetPreferredHeight(400);
-	aRenameDialog->Resize((mWidth - 400) / 2, (mHeight - aPrefHght) / 2, 400, aPrefHght);
-	aRenameDialog->mEditWidget->SetText(theUserName, true);
-	aRenameDialog->mEditWidget->mCursorPos = theUserName.size();
-	aRenameDialog->mEditWidget->mHilitePos = 0;
-	AddDialog(DIALOG_RENAME, aRenameDialog);
 }
 
 void Sexy::WinFishApp::DoArchipelagoDialog(const SexyString& theUserName)

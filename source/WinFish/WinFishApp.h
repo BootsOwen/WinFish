@@ -331,13 +331,11 @@ namespace Sexy
 		void						DoTrialVersionExpiredDialog();
 		void						DoUpdateDialog();
 		void						DoContinueDialog();
-		void						DoNewUserDialog();
 		void						DoOptionsDialog(bool theFlag);
 		void						DoQuitDialog();
 		void						DoWhoAreYouDialog();
 		void						DoGiveDialog();
 		void						DoDeleteWarningDialog(SexyString& theName);
-		void						DoRenameDialog(SexyString theUserName);
 		void						DoArchipelagoDialog(const SexyString& theUserName);
 		void						ApplyArchipelagoDialog(bool doApply);
 		void						DoUpdateCheckDialog();
@@ -356,9 +354,7 @@ namespace Sexy
 
 		void						DoDialogUnkF(int theId, bool isModal, const SexyString& theDiaHeader, const SexyString& theDiaLines, const SexyString& theDiaFooter, int theBtnMode);
 
-		void						MakeNewUser(bool makeUser);
 		void						DeleteUser(bool doDelete);
-		void						RenameUser(bool doRename);
 		void						StartGame();
 		bool						LoadBoardGame();
 		void						CreateBoard();
