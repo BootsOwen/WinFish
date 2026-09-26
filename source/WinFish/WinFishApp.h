@@ -369,6 +369,7 @@ namespace Sexy
 
 		virtual void				Start();
 		virtual void				Shutdown();
+		virtual void				InitPropertiesHook();
 		virtual void				ReadFromRegistry();
 		virtual void				WriteToRegistry();
 		virtual bool				ChangeDirHook(const char* theIntendedPath);

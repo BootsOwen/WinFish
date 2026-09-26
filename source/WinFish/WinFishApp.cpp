@@ -1255,6 +1255,18 @@ void Sexy::WinFishApp::SetScreenSaver(const char* thePath)
 	}
 }
 
+void Sexy::WinFishApp::InitPropertiesHook()
+{
+	SexyApp::InitPropertiesHook();
+
+	// Keep the mod's profiles and settings apart from the stock game. The data folder is
+	// ProgramData\<mFullCompanyName>\<mProdName> and the registry key comes from the RegistryKey property;
+	// the base game's signed partner.xml sets both, so override them after it loads.
+	mProdName = "Insaniquarium Archipelago";
+	SetString("ProdName", L"Insaniquarium Archipelago");
+	SetString("RegistryKey", L"PopCap\\Insaniquarium Archipelago");
+}
+
 void Sexy::WinFishApp::ReadFromRegistry()
 {
 	SexyApp::ReadFromRegistry();
