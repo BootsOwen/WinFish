@@ -298,7 +298,8 @@ void Sexy::GameSelector::DrawOverlay(Graphics* g)
 			switch (mApp->mAPBridge->GetState())
 			{
 			case APBridge::AP_SLOT_CONNECTED:	g->SetColor(Color(0x80, 0xff, 0x80)); break;
-			case APBridge::AP_SLOT_REFUSED:		g->SetColor(Color(0xff, 0x80, 0x80)); break;
+			case APBridge::AP_SLOT_REFUSED:
+			case APBridge::AP_WRONG_SEED:		g->SetColor(Color(0xff, 0x80, 0x80)); break;
 			default:							g->SetColor(Color(0xe1, 0xfa, 0xfa)); break;
 			}
 			// The open area ends where the button panel starts (x ~ 320).

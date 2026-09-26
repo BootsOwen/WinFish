@@ -181,6 +181,7 @@ namespace Sexy
 		DIALOG_VIRTUAL,
 		DIALOG_GIVE_SHELLS,
 		DIALOG_ARCHIPELAGO,
+		DIALOG_AP_NEW_SEED,
 		DIALOG_END_ID
 	};
 
@@ -257,6 +258,7 @@ namespace Sexy
 		std::string						mAPServer;		// its settings at that time
 		std::string						mAPSlot;
 		std::string						mAPPassword;
+		bool							mAPSeedPromptOpen;	// asking whether to start over for a different multiworld
 
 	public:
 		WinFishApp();
@@ -330,6 +332,7 @@ namespace Sexy
 		// Game code calls this when an Archipelago location is completed.
 		void						CheckArchipelagoLocation(int theLocationId);
 		void						ApplyArchipelagoItem(const APReceivedItem& theItem);
+		void						ApplyNewSeedChoice(bool theStartOver);
 		bool						CheckTrialEnded();
 
 		void						DoTrialVersionExpiredDialog();

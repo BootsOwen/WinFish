@@ -119,6 +119,12 @@ void APBridge::Disconnect()
 	mState = AP_DISCONNECTED;
 }
 
+void APBridge::StopForWrongSeed()
+{
+	Disconnect();
+	mState = AP_WRONG_SEED;
+}
+
 void APBridge::Update()
 {
 	if (mClient != NULL)
@@ -183,6 +189,8 @@ std::string APBridge::GetStatusText() const
 		return "Archipelago: connected as " + mSlot;
 	case AP_SLOT_REFUSED:
 		return "Archipelago: refused (" + mLastError + ")";
+	case AP_WRONG_SEED:
+		return "Archipelago: this server is running a different multiworld";
 	default:
 		return "";
 	}

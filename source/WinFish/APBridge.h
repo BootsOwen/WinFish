@@ -32,6 +32,7 @@ namespace Sexy
 			AP_SLOT_CONNECTING,
 			AP_SLOT_CONNECTED,
 			AP_SLOT_REFUSED,
+			AP_WRONG_SEED,		// stopped: the server runs a different multiworld than the profile
 		};
 
 		// theDataFolder holds ap_uuid.txt; theCertFile is the CA bundle used for wss://.
@@ -41,6 +42,8 @@ namespace Sexy
 		// theServer is "host:port" or a full ws:// / wss:// uri; no scheme tries wss first, then ws.
 		void Connect(const std::string& theServer, const std::string& theSlot, const std::string& thePassword);
 		void Disconnect();
+		// Disconnects and stays in AP_WRONG_SEED until the next Connect().
+		void StopForWrongSeed();
 
 		// Call once per frame. All apclientpp callbacks fire from inside this call.
 		void Update();

@@ -243,6 +243,7 @@ WinFishApp::WinFishApp()
 	mCurrentProfile = NULL;
 	mAPBridge = NULL;
 	mAPProfile = NULL;
+	mAPSeedPromptOpen = false;
 
 	mSeed = new MTRand(Rand());
 
@@ -785,6 +786,9 @@ void Sexy::WinFishApp::ButtonDepress(int theId)
 				case 3000 + DIALOG_ARCHIPELAGO:
 					ApplyArchipelagoDialog(false);
 					break;
+				case 3000 + DIALOG_AP_NEW_SEED:
+					ApplyNewSeedChoice(false);
+					break;
 				default:
 					KillDialog(anIdVar1);
 				}
@@ -919,6 +923,9 @@ void Sexy::WinFishApp::ButtonDepress(int theId)
 		break;
 	case DIALOG_ARCHIPELAGO:
 		ApplyArchipelagoDialog(true);
+		break;
+	case DIALOG_AP_NEW_SEED:
+		ApplyNewSeedChoice(true);
 		break;
 	case DIALOG_RESTART_GAME:
 		RestartLevel();
@@ -2263,6 +2270,10 @@ void Sexy::WinFishApp::UpdateArchipelago()
 		mAPSlot = aSlot;
 		mAPPassword = aPassword;
 
+		// A new-multiworld prompt belongs to the old connection.
+		KillDialog(DIALOG_AP_NEW_SEED);
+		mAPSeedPromptOpen = false;
+
 		if (aServer.empty() || aSlot.empty())
 			mAPBridge->Disconnect();
 		else
@@ -2279,17 +2290,29 @@ void Sexy::WinFishApp::UpdateArchipelago()
 
 	if (mAPBridge->ConsumeJustConnected())
 	{
-		// Hosts reuse addresses and slot names across seeds; the item index only means something for one seed.
+		// The seed is part of the profile's identity. Hosts reuse ports, so a different world with the same slot
+		// name can turn up at this address; never apply its items or send it our outbox without asking.
 		std::string aSeed = mAPBridge->GetSeed();
+		if (aProf->mAPSeed.empty())
+			aProf->mAPSeed = aSeed;
+
 		if (aProf->mAPSeed != aSeed)
 		{
-			aProf->mAPSeed = aSeed;
-			aProf->mAPItemIndex = 0;
+			mAPSeedPromptOpen = true;
+			DoDialog(DIALOG_AP_NEW_SEED, true, "Different Multiworld",
+				"This server is running a different multiworld than this profile was playing. "
+				"Start this profile over for the new multiworld?", "", Dialog::BUTTONS_YES_NO);
 		}
-
-		// Checks made while disconnected (saved in the outbox) go out now.
-		mAPBridge->SendChecks(aProf->mAPPendingChecks);
+		else
+		{
+			// Checks made while disconnected (saved in the outbox) go out now.
+			mAPBridge->SendChecks(aProf->mAPPendingChecks);
+		}
 	}
+
+	// Leave everything queued until the player answers; the login's full item list is still in the bridge.
+	if (mAPSeedPromptOpen)
+		return;
 
 	// The server is the truth for locations: once it reports a check, it no longer needs to be kept.
 	std::vector<int> aConfirmed;
@@ -2324,6 +2347,27 @@ void Sexy::WinFishApp::CheckArchipelagoLocation(int theLocationId)
 	mCurrentProfile->mAPPendingChecks.insert(theLocationId);
 	if (mAPBridge != NULL)
 		mAPBridge->SendChecks({ theLocationId });
+}
+
+void Sexy::WinFishApp::ApplyNewSeedChoice(bool theStartOver)
+{
+	KillDialog(DIALOG_AP_NEW_SEED);
+	if (!mAPSeedPromptOpen)
+		return;
+	mAPSeedPromptOpen = false;
+
+	if (!theStartOver || mCurrentProfile == NULL)
+	{
+		// Stays stopped until the profile's connection changes (e.g. the port is fixed with Edit).
+		mAPBridge->StopForWrongSeed();
+		return;
+	}
+
+	// Start over: the index and outbox belonged to the old seed. The queued items are applied from index 0
+	// next frame. Nothing is saved here; the game's next profile save picks this up.
+	mCurrentProfile->mAPSeed = mAPBridge->GetSeed();
+	mCurrentProfile->mAPItemIndex = 0;
+	mCurrentProfile->mAPPendingChecks.clear();
 }
 
 void Sexy::WinFishApp::ApplyArchipelagoItem(const APReceivedItem& theItem)
