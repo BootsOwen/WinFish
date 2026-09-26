@@ -2270,6 +2270,67 @@ void Sexy::WinFishApp::UpdateArchipelago()
 	}
 
 	mAPBridge->Update();
+
+	// None of this saves: the item index and outbox are written by the game's own profile saves, so they
+	// always match the progress in the save.
+	UserProfile* aProf = mCurrentProfile;
+	if (aProf == NULL || !aProf->HasAPConnection())
+		return;
+
+	if (mAPBridge->ConsumeJustConnected())
+	{
+		// Hosts reuse addresses and slot names across seeds; the item index only means something for one seed.
+		std::string aSeed = mAPBridge->GetSeed();
+		if (aProf->mAPSeed != aSeed)
+		{
+			aProf->mAPSeed = aSeed;
+			aProf->mAPItemIndex = 0;
+		}
+
+		// Checks made while disconnected (saved in the outbox) go out now.
+		mAPBridge->SendChecks(aProf->mAPPendingChecks);
+	}
+
+	// The server is the truth for locations: once it reports a check, it no longer needs to be kept.
+	std::vector<int> aConfirmed;
+	mAPBridge->PopConfirmedChecks(aConfirmed);
+	for (int aLocationId : aConfirmed)
+		aProf->mAPPendingChecks.erase(aLocationId);
+
+	// The server resends the full list on every login; the saved index skips what was already applied.
+	std::vector<APReceivedItem> anItems;
+	mAPBridge->PopReceivedItems(anItems);
+	for (const APReceivedItem& anItem : anItems)
+	{
+		if (anItem.mIndex < aProf->mAPItemIndex)
+			continue;
+		if (anItem.mIndex > aProf->mAPItemIndex)
+		{
+			// Items were skipped; ask for a full resend and pick up from the saved index again.
+			mAPBridge->RequestSync();
+			break;
+		}
+		ApplyArchipelagoItem(anItem);
+		aProf->mAPItemIndex++;
+	}
+}
+
+void Sexy::WinFishApp::CheckArchipelagoLocation(int theLocationId)
+{
+	if (mCurrentProfile == NULL)
+		return;
+
+	// Kept in the outbox until the server confirms it, in case the game saves and closes before then.
+	mCurrentProfile->mAPPendingChecks.insert(theLocationId);
+	if (mAPBridge != NULL)
+		mAPBridge->SendChecks({ theLocationId });
+}
+
+void Sexy::WinFishApp::ApplyArchipelagoItem(const APReceivedItem& theItem)
+{
+	// No item has an effect yet; real effects will be dispatched from here.
+	OutputDebugStringA(StrFormat("Fishapelago: received item %lld (index %d, from player %d, location %lld)\n",
+		theItem.mItem, theItem.mIndex, theItem.mPlayer, theItem.mLocation).c_str());
 }
 
 void Sexy::WinFishApp::TitleScreenIsFinished()

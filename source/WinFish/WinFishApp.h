@@ -25,6 +25,7 @@ namespace Sexy
 
 	class WorkerThread;
 	class APBridge;
+	struct APReceivedItem;
 	class HighScoreMgr;
 	class ProfileMgr;
 	class UserProfile;
@@ -326,6 +327,9 @@ namespace Sexy
 
 		void						UpdatePlayData();
 		void						UpdateArchipelago();
+		// Game code calls this when an Archipelago location is completed.
+		void						CheckArchipelagoLocation(int theLocationId);
+		void						ApplyArchipelagoItem(const APReceivedItem& theItem);
 		bool						CheckTrialEnded();
 
 		void						DoTrialVersionExpiredDialog();
