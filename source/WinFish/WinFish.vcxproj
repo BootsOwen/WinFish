@@ -117,6 +117,7 @@ xcopy "$(SolutionDir)sounds" "$(TargetDir)sounds\" /E /I /Y
 xcopy "$(SolutionDir)properties" "$(TargetDir)properties\" /E /I /Y
 xcopy "$(SolutionDir)data" "$(TargetDir)data\" /E /I /Y
 xcopy "$(SolutionDir)fishsongs" "$(TargetDir)fishsongs\" /E /I /Y
+xcopy "$(SolutionDir)archipelago" "$(TargetDir)archipelago\" /E /I /Y
 copy "$(SolutionDir)source\apclientpp\cacert.pem" "$(TargetDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
