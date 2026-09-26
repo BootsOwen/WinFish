@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ResourceManifest>
+
+<!-- Custom Archipelago art; loaded after properties/resources.xml by WinFishApp -->
+<Resources id="Archipelago">
+<SetDefaults path="archipelago/images" idprefix="IMAGE_" />
+
+<Image id="MERYLSHIRT"						path="merylshirt" />
+
+</Resources>
+
+</ResourceManifest>

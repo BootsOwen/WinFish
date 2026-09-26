@@ -8,7 +8,6 @@
 namespace Sexy
 {
 	class GameSelector;
-	class Image;
 	class MemoryImage;
 	class HyperlinkWidget;
 	class DialogButton;
@@ -48,7 +47,6 @@ namespace Sexy
 		int						mSparkleAnimTimer;
 		int						mMerylBlinkTimer;
 		int						mMerylFlopTimer;
-		Image*					mMerylShirtImage;
 		void*					m0xe4;
 
 	public:

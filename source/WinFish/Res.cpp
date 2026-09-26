@@ -12,6 +12,7 @@ bool Sexy::ExtractResourcesByName(ResourceManager* theManager, const char* theNa
 	if (strcmp(theName, "Init") == 0) return ExtractInitResources(theManager);
 	if (strcmp(theName, "LoadingThread") == 0) return ExtractLoadingThreadResources(theManager);
 	if (strcmp(theName, "Register") == 0) return ExtractRegisterResources(theManager);
+	if (strcmp(theName, "Archipelago") == 0) return ExtractArchipelagoResources(theManager);
 	return false;
 }
 
@@ -735,6 +736,25 @@ bool Sexy::ExtractRegisterResources(ResourceManager* theManager)
 	return true;
 }
 
+// Archipelago Resources
+Image* Sexy::IMAGE_MERYLSHIRT;
+
+bool Sexy::ExtractArchipelagoResources(ResourceManager* theManager)
+{
+	gNeedRecalcVariableToIdMap = true;
+
+	ResourceManager& aMgr = *theManager;
+	try
+	{
+		IMAGE_MERYLSHIRT = aMgr.GetImageThrow("IMAGE_MERYLSHIRT");
+	}
+	catch (ResourceManagerException&)
+	{
+		return false;
+	}
+	return true;
+}
+
 static void* gResources[] =
 {
 	&IMAGE_CURSOR_POINTER,
@@ -999,6 +1019,7 @@ static void* gResources[] =
 	&IMAGE_SCL_GEKKO,
 	&IMAGE_SCL_BREEDER,
 	&IMAGE_SCL_ULTRA,
+	&IMAGE_MERYLSHIRT,
 	&SOUND_AWOOGA,
 	&SOUND_APPLAUSE,
 	&SOUND_BABY,
@@ -1407,6 +1428,7 @@ const char* Sexy::GetStringIdById(int theId)
 	case IMAGE_SCL_GEKKO_ID: return "IMAGE_SCL_GEKKO";
 	case IMAGE_SCL_BREEDER_ID: return "IMAGE_SCL_BREEDER";
 	case IMAGE_SCL_ULTRA_ID: return "IMAGE_SCL_ULTRA";
+	case IMAGE_MERYLSHIRT_ID: return "IMAGE_MERYLSHIRT";
 	case SOUND_AWOOGA_ID: return "SOUND_AWOOGA";
 	case SOUND_APPLAUSE_ID: return "SOUND_APPLAUSE";
 	case SOUND_BABY_ID: return "SOUND_BABY";

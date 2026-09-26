@@ -440,7 +440,8 @@ void Sexy::WinFishApp::Init()
 		}
 	}
 
-	bool aSuccessfulResLoad = mResourceManager->ParseResourcesFile("properties\\resources.xml");
+	bool aSuccessfulResLoad = mResourceManager->ParseResourcesFile("properties\\resources.xml") &&
+		mResourceManager->ParseResourcesFile("archipelago\\properties\\resources.xml");
 
 
 	if (aSuccessfulResLoad)
@@ -521,7 +522,7 @@ void Sexy::WinFishApp::Init()
 
 void Sexy::WinFishApp::LoadingThreadProc()
 {
-	SexyString aResNames[] = {"Register", "LoadingThread"};
+	SexyString aResNames[] = {"Register", "LoadingThread", "Archipelago"};
 
 	int arraySize = sizeof(aResNames) / sizeof(aResNames[0]);
 	for (int i = 0; i < arraySize; i++)

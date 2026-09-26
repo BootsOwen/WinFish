@@ -327,6 +327,9 @@ namespace Sexy
 	extern int SOUND_ZAP;
 	extern int SOUND_ZZAM;
 
+	bool ExtractArchipelagoResources(ResourceManager* theMgr);
+	extern Image* IMAGE_MERYLSHIRT;
+
 	// Register Resources
 	bool ExtractRegisterResources(ResourceManager* theMgr);
 	extern Font* FONT_BLAMBOTPRO15;
@@ -610,6 +613,7 @@ namespace Sexy
 		IMAGE_SCL_GEKKO_ID,
 		IMAGE_SCL_BREEDER_ID,
 		IMAGE_SCL_ULTRA_ID,
+		IMAGE_MERYLSHIRT_ID,
 		SOUND_AWOOGA_ID,
 		SOUND_START_ID = SOUND_AWOOGA_ID,
 		SOUND_APPLAUSE_ID,

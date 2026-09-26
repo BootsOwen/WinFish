@@ -2,7 +2,6 @@
 #include <SexyAppFramework/WidgetManager.h>
 #include <SexyAppFramework/ButtonWidget.h>
 #include <SexyAppFramework/DialogButton.h>
-#include <SexyAppFramework/DDImage.h>
 
 #include "GameSelector.h"
 #include "WinFishApp.h"
@@ -80,9 +79,6 @@ Sexy::GameSelector::GameSelector(WinFishApp* theApp)
 	mMerylBlinkTimer = mApp->mSeed->Next() % 150 + 100;
 	mMerylFlopTimer = mApp->mSeed->Next() % 500 + 200;
 
-	// Custom art lives outside the player-supplied images folder; NULL if missing.
-	mMerylShirtImage = mApp->GetImage("archipelago/images/merylshirt");
-
 	mNotYouButton = NULL;
 
 	if (!mApp->mGameNotPlayed && !mApp->IsSongPlaying(2, 0))
@@ -137,8 +133,6 @@ Sexy::GameSelector::~GameSelector()
 		delete mSandboxCheatCode;
 	if (mGiveCheatCode)
 		delete mGiveCheatCode;
-	if (mMerylShirtImage)
-		delete mMerylShirtImage;
 }
 
 void Sexy::GameSelector::Update()
@@ -251,8 +245,7 @@ void Sexy::GameSelector::Draw(Graphics* g)
 
 	g->DrawImageAnim(IMAGE_MERYLBLINK, 139, 196, mMerylBlinkTimer);
 	g->DrawImageAnim(IMAGE_MERYLTAIL, 39, 301, mMerylFlopTimer);
-	if (mMerylShirtImage)
-		g->DrawImage(mMerylShirtImage, 102, 247);
+	g->DrawImage(IMAGE_MERYLSHIRT, 102, 247);
 
 	if (mSpeechFadeTimer > 0)
 	{
