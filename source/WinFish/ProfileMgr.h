@@ -52,6 +52,9 @@ namespace Sexy
 		// so it always matches the item effects in the save. Checked locations aren't stored: the server has them.
 		std::string mAPSeed;		// seed the index belongs to; a different seed resets it
 		int mAPItemIndex;			// received items already applied
+		// Checks made in game that the server hasn't confirmed yet (e.g. a level cleared while disconnected,
+		// which can't be replayed). Resent on connect; entries leave once the server reports them checked.
+		std::set<int> mAPPendingChecks;
 
 	public:
 		UserProfile();

@@ -456,6 +456,7 @@ void Sexy::UserProfile::Init()
     mAPPassword.clear();
     mAPSeed.clear();
     mAPItemIndex = 0;
+    mAPPendingChecks.clear();
 }
 
 void Sexy::UserProfile::SetCheatFlag(char thePos, bool theFlag)
@@ -501,8 +502,9 @@ void Sexy::UserProfile::SyncData(DataSync& theDataSync)
     if (theReader)
         Init();
 
-    // 0x80000000 is the original game's format.
-    uint aVer = 0x80000002;
+    // 0x80000000 is the original game's format; 0x80000001 is Fishapelago's first release, which appends
+    // the Archipelago fields below.
+    uint aVer = 0x80000001;
     theDataSync.SyncLong(aVer);
 
     bool unkFlag = false;
@@ -573,12 +575,25 @@ void Sexy::UserProfile::SyncData(DataSync& theDataSync)
         theDataSync.SyncString(mAPServer);
         theDataSync.SyncString(mAPSlot);
         theDataSync.SyncString(mAPPassword);
-    }
-
-    if (aVer >= 0x80000002)
-    {
         theDataSync.SyncString(mAPSeed);
         theDataSync.SyncLong(mAPItemIndex);
+
+        int aCount = (int)mAPPendingChecks.size();
+        theDataSync.SyncLong(aCount);
+        if (theReader)
+        {
+            for (int i = 0; i < aCount; i++)
+            {
+                int aLocationId = 0;
+                theDataSync.SyncLong(aLocationId);
+                mAPPendingChecks.insert(aLocationId);
+            }
+        }
+        else
+        {
+            for (int aLocationId : mAPPendingChecks)
+                theDataSync.SyncLong(aLocationId);
+        }
     }
 
     if (theReader)
