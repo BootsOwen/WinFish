@@ -31,6 +31,7 @@ APBridge::APBridge(const std::string& theDataFolder, const std::string& theCertF
 	mState = AP_DISCONNECTED;
 	mSocketErrors = 0;
 	mSocketErrorsToReport = 1;
+	mJustConnected = false;
 	mDataFolder = theDataFolder;
 	mCertFile = theCertFile;
 }
@@ -49,6 +50,9 @@ void APBridge::Connect(const std::string& theServer, const std::string& theSlot,
 	mPassword = thePassword;
 	mLastError.clear();
 	mSocketErrors = 0;
+	mJustConnected = false;
+	mReceivedItems.clear();
+	mConfirmedChecks.clear();
 
 	std::string aUuid = ap_get_uuid(mDataFolder + "ap_uuid.txt", theServer);
 	std::string aUri = MakeServerUri(theServer);
@@ -79,6 +83,20 @@ void APBridge::Connect(const std::string& theServer, const std::string& theSlot,
 	{
 		mState = AP_SLOT_CONNECTED;
 		mLastError.clear();
+		mJustConnected = true;
+	});
+
+	mClient->set_items_received_handler([this](const std::list<APClient::NetworkItem>& theItems)
+	{
+		for (const APClient::NetworkItem& anItem : theItems)
+			mReceivedItems.push_back({ anItem.item, anItem.location, anItem.player, anItem.index });
+	});
+
+	// Fires with the server's checked locations right after login, and again whenever it confirms new checks.
+	mClient->set_location_checked_handler([this](const std::list<int64_t>& theLocations)
+	{
+		for (int64_t aLocation : theLocations)
+			mConfirmedChecks.push_back((int)aLocation);
 	});
 
 	mClient->set_slot_refused_handler([this](const std::list<std::string>& theErrors)
@@ -105,6 +123,50 @@ void APBridge::Update()
 {
 	if (mClient != NULL)
 		mClient->poll();
+}
+
+bool APBridge::ConsumeJustConnected()
+{
+	bool aJustConnected = mJustConnected;
+	mJustConnected = false;
+	return aJustConnected;
+}
+
+void APBridge::PopReceivedItems(std::vector<APReceivedItem>& theItems)
+{
+	theItems.swap(mReceivedItems);
+	mReceivedItems.clear();
+}
+
+void APBridge::PopConfirmedChecks(std::vector<int>& theLocations)
+{
+	theLocations.swap(mConfirmedChecks);
+	mConfirmedChecks.clear();
+}
+
+std::string APBridge::GetSeed() const
+{
+	return mClient != NULL ? mClient->get_seed() : "";
+}
+
+void APBridge::SendChecks(const std::set<int>& theLocations)
+{
+	if (mClient == NULL || theLocations.empty())
+		return;
+	std::list<int64_t> aLocations(theLocations.begin(), theLocations.end());
+	mClient->LocationChecks(aLocations);
+}
+
+void APBridge::SendGoal()
+{
+	if (mClient != NULL)
+		mClient->StatusUpdate(APClient::ClientStatus::GOAL);
+}
+
+void APBridge::RequestSync()
+{
+	if (mClient != NULL)
+		mClient->Sync();
 }
 
 std::string APBridge::GetStatusText() const
